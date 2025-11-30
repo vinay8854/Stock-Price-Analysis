@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import yfinance as yf
 import datetime
-import pandas_datareader.data as web
-# Import from the correct utils location
-from pages.utils import capm_functions
+# Removed broken 'pandas_datareader' import
+from pages.utils import capm_functions 
 
 st.set_page_config(
     page_title="CAPM",
@@ -33,7 +32,6 @@ if len(stock_list) > 0:
         start = datetime.date(end.year - year, end.month, end.day)
 
         # Download S&P 500 Data (Market)
-        # Using yfinance (^GSPC) is more reliable for matching dates with stocks
         sp500_data = yf.download('^GSPC', start=start, end=end)['Close']
         sp500_df = pd.DataFrame(sp500_data)
         sp500_df.columns = ['sp500']
@@ -44,12 +42,10 @@ if len(stock_list) > 0:
             data = yf.download(stock, start=start, end=end)['Close']
             stock_df[stock] = data
 
-        # Reset indices to handle merging
         stock_df.reset_index(inplace=True)
         sp500_df.reset_index(inplace=True)
         
-        # Ensure column names are correct for merging (yfinance puts Date in index)
-        # Rename 'Date' column if necessary, yfinance usually gives 'Date' or 'Datetime'
+        # Ensure column names are correct for merging
         if 'Date' not in stock_df.columns:
             stock_df.rename(columns={'index': 'Date'}, inplace=True)
         if 'Date' not in sp500_df.columns:
@@ -57,8 +53,6 @@ if len(stock_list) > 0:
 
         # Merge Market and Stock Data
         stock_df = pd.merge(stock_df, sp500_df, on='Date', how='inner')
-        
-        # Set Date as index for plotting
         stock_df.set_index('Date', inplace=True)
 
         # --- 3. Visualizations ---
@@ -76,7 +70,6 @@ if len(stock_list) > 0:
             st.plotly_chart(capm_functions.interactive_plot(stock_df), use_container_width=True)
         with col2:
             st.markdown("### Normalized Price (Growth Factor)")
-            # Pass only the stock columns (excluding date index) to normalization
             st.plotly_chart(capm_functions.interactive_plot(capm_functions.normalization(stock_df)), use_container_width=True)
 
         # --- 4. CAPM Calculations ---
@@ -91,7 +84,6 @@ if len(stock_list) > 0:
                 beta[i] = b
                 alpha[i] = a
 
-        # Display Beta
         beta_df = pd.DataFrame(columns=['Stock', 'Beta Value'])
         beta_df['Stock'] = beta.keys()
         beta_df['Beta Value'] = [round(i, 2) for i in beta.values()]
@@ -101,16 +93,14 @@ if len(stock_list) > 0:
             st.markdown('### Calculated Beta Value')
             st.dataframe(beta_df, use_container_width=True)
 
-        # Calculate Expected Return
-        rf = 0.02 # Risk Free Rate (approx 2%)
-        rm = stocks_daily_return['sp500'].mean() * 252 # Annualized Market Return
+        rf = 0.02
+        rm = stocks_daily_return['sp500'].mean() * 252
 
         return_df = pd.DataFrame()
         return_value = []
         for stock, value in beta.items():
-            # CAPM Formula: Ra = Rf + Beta * (Rm - Rf)
             expected_return = rf + (value * (rm - rf))
-            return_value.append(round(expected_return * 100, 2)) # Convert to %
+            return_value.append(round(expected_return * 100, 2))
 
         return_df['Stock'] = beta.keys()
         return_df['Return Value (%)'] = return_value
@@ -121,6 +111,5 @@ if len(stock_list) > 0:
             
     except Exception as e:
         st.error(f"An error occurred: {e}")
-        st.write("Try selecting fewer stocks or reducing the year range.")
 else:
     st.info("Please select at least one stock.")
