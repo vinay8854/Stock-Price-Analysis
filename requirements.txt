@@ -4,6 +4,11 @@ numpy
 yfinance
 plotly
 pandas_ta
+ta
 statsmodels
 scikit-learn
 python-dateutil
+scipy
+pandas-datareader
+lxml
+protobuf
