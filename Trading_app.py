@@ -23,24 +23,33 @@ st.markdown("---")
 st.markdown("## 🚀 Project Features")
 
 # Using columns to make the layout look professional
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("### 📊 1. Comprehensive Stock Analysis")
+    st.markdown("### 📊 1. Stock Analysis")
     st.write("""
-    Get a deep dive into any stock's performance. Our analysis module includes:
-    - **Fundamental Data:** Market Cap, PE Ratio, EPS, and more.
-    - **Technical Indicators:** Interactive charts with RSI, MACD, and Moving Averages.
-    - **Historical Tracking:** View price movements from 5 days to 5 years.
+    Get a deep dive into any stock's performance.
+    - **Fundamental Data:** Market Cap, PE Ratio, EPS.
+    - **Technical Indicators:** RSI, MACD, Moving Averages.
+    - **Historical Tracking:** Price movements from 5d to 5y.
     """)
 
 with col2:
-    st.markdown("### 🤖 2. Advanced Stock Prediction")
+    st.markdown("### 🤖 2. Stock Prediction")
     st.write("""
-    Leverage the power of Machine Learning (ARIMA) to forecast future trends.
-    - **30-Day Forecast:** Predict closing prices for the next month.
-    - **Model Evaluation:** Transparent RMSE scoring to understand model accuracy.
-    - **Trend Visualization:** See historical data connected seamlessly with future predictions.
+    Leverage Machine Learning (ARIMA) to forecast trends.
+    - **30-Day Forecast:** Predict future closing prices.
+    - **Model Evaluation:** RMSE scoring for accuracy.
+    - **Trend Visualization:** History + Prediction graphs.
+    """)
+
+with col3:
+    st.markdown("### ⚖️ 3. CAPM & Beta")
+    st.write("""
+    Analyze risk versus expected return.
+    - **Beta Calculation:** Measure stock volatility vs Market (S&P500).
+    - **Expected Returns:** Calculate ROI using the CAPM formula.
+    - **Alpha:** See if a stock outperforms the market.
     """)
 
 st.markdown("---")
