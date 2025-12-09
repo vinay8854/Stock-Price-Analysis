@@ -23,7 +23,7 @@ def normalization(df):
 
 def daily_return(df):
     # Use pandas pct_change() for accurate and fast calculation
-    df_daily_return = df.pct_change() * 100
+    df_daily_return = df.pct_change()
     df_daily_return.dropna(inplace=True)
     return df_daily_return
 
